@@ -12,6 +12,14 @@
 
 void init_values_kf();
 int init_sensors();
+
+
+void console();
+int checkIgnitor();
+void headerbb();
+void headerll();
+
+
 void on_pause_press();
 void on_pause_release();
 void __signal_handler(__attribute__ ((unused)) int dummy);

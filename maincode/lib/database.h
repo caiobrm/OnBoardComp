@@ -16,6 +16,9 @@
 
 // VARIABLES //
 extern bool running;
+extern FILE *fp;
+
+
 extern rc_mpu_data_t mpu_data;
 extern rc_bmp_data_t bmp_data;
 extern rc_kalman_t kf;

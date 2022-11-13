@@ -1,6 +1,10 @@
 #include "lib/libvector.h"
 
+
+FILE *fp;
 bool running = false;
+
+
 rc_mpu_data_t mpu_data;
 rc_bmp_data_t bmp_data;
 rc_kalman_t kf = RC_KALMAN_INITIALIZER;
@@ -61,7 +65,7 @@ void init_values_kf(){
 
 int init_sensors()
 {
-
+        signal(SIGINT, __signal_handler);
         if (rc_kalman_alloc_lin(&kf,F,G,H,Q,R,Pi) == -1)
                 return -1;
         // initialize the little LP filter to take out accel noise
@@ -90,6 +94,64 @@ int init_sensors()
         rc_mpu_set_dmp_callback(__dmp_handler);
         return 1;
 }
+
+
+void headerbb(void)
+{
+
+        printf("\r\n");
+        printf("time|");
+        printf(" altitude|");
+        printf(" velocity|");
+        printf(" accel_bias|");
+        printf(" alt (bmp)|");
+        printf(" vert_accel|");
+        printf("\n");
+}
+void headerll(FILE **fp)
+{
+
+        // fflush(stdout);
+        fprintf(*fp, "time,");
+        fprintf(*fp, "altitude,");
+        fprintf(*fp, "velocity,");
+        fprintf(*fp, "accel_bias,");
+        fprintf(*fp, "alt (bmp),");
+        fprintf(*fp, "vert_accel");
+        fprintf(*fp, "\n");
+}
+
+void headerll()
+{
+
+        // fflush(stdout);
+        fprintf(fp, "time,");
+        fprintf(fp, "altitude,");
+        fprintf(fp, "velocity,");
+        fprintf(fp, "accel_bias,");
+        fprintf(fp, "alt (bmp),");
+        fprintf(fp, "vert_accel");
+        fprintf(fp, "\n");
+}
+
+int checkIgnitor(void)
+{
+        return !rc_gpio_get_value(3, 1);
+}
+
+void console()
+{
+
+        printf("\r");
+        //printf("%6.9lfs|", (double)counter / 1000000000);
+        printf(" %8.4fm|", kf.x_est.d[0]);
+        printf(" %7.4fm/s|", kf.x_est.d[1]);
+        printf(" %7.4fm/s^2|", kf.x_est.d[2]);
+        printf(" %9.4fm|", bmp_data.alt_m);
+        printf(" %7.4fm/s^2|", acc_lp.newest_output);
+}
+
+
 
 
 
