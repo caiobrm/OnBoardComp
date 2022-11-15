@@ -10,6 +10,8 @@
 #define LIBVECTOR_H_INCLUDED
 
 
+#define PATH "/OnBoardComp/data/logs.txt"
+
 void init_values_kf();
 int init_sensors();
 
