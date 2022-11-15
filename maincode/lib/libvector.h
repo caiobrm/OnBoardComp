@@ -3,8 +3,8 @@
 #include <robotcontrol.h>
 #include "database.h"
 #include <time.h>
-#include <math.h>
 #include <signal.h>
+#include <fstream>
 
 #ifndef LIBVECTOR_H_INCLUDED
 #define LIBVECTOR_H_INCLUDED
@@ -18,6 +18,7 @@ void console();
 int checkIgnitor();
 void headerbb();
 void headerll();
+void headerLogging();
 
 
 void on_pause_press();

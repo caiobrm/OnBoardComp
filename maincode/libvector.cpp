@@ -1,9 +1,9 @@
 #include "lib/libvector.h"
 
+using namespace std;
 
 FILE *fp;
 bool running = false;
-
 
 rc_mpu_data_t mpu_data;
 rc_bmp_data_t bmp_data;
@@ -18,6 +18,7 @@ rc_matrix_t H = RC_MATRIX_INITIALIZER;
 rc_matrix_t Q = RC_MATRIX_INITIALIZER;
 rc_matrix_t R = RC_MATRIX_INITIALIZER;
 rc_matrix_t Pi = RC_MATRIX_INITIALIZER;
+extern ofstream logs;
 
 
 void init_values_kf(){
@@ -108,18 +109,6 @@ void headerbb(void)
         printf(" vert_accel|");
         printf("\n");
 }
-void headerll(FILE **fp)
-{
-
-        // fflush(stdout);
-        fprintf(*fp, "time,");
-        fprintf(*fp, "altitude,");
-        fprintf(*fp, "velocity,");
-        fprintf(*fp, "accel_bias,");
-        fprintf(*fp, "alt (bmp),");
-        fprintf(*fp, "vert_accel");
-        fprintf(*fp, "\n");
-}
 
 void headerll()
 {
@@ -150,6 +139,18 @@ void console()
         printf(" %9.4fm|", bmp_data.alt_m);
         printf(" %7.4fm/s^2|", acc_lp.newest_output);
 }
+
+
+void headerLogging(){
+
+        logs << "| time | altitude | velocity | accel_bias | alt (bmp) | vert_accel | \n" ;
+
+}
+
+
+
+
+
 
 
 
@@ -190,31 +191,6 @@ void __dmp_handler(void)
         }
         return;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // PAUSE SECTION //
 

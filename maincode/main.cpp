@@ -2,6 +2,7 @@
 
 using namespace std;
 
+ofstream logs;
 
 int main()
 {
@@ -10,13 +11,14 @@ int main()
 
 	init_values_kf();
 	init_sensors();
+	logs.open("../logs/logs.txt", ios::app);
 
 	while(running){
-
-
-		rc_usleep(100000);
+		printf("1\n");
+		headerLogging();
+		rc_usleep(1000000);
 		fflush(stdout);
 	}
-
+	logs.close();
 	return 0;
 }
