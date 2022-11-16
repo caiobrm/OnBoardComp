@@ -84,31 +84,38 @@ bool init_sensors()
 {
         signal(SIGINT, __signal_handler);
         if (rc_kalman_alloc_lin(&kf, F, G, H, Q, R, Pi) == -1)
-                return false;
+                rc_set_state(EXITING);
+                //return false;
         // initialize the little LP filter to take out accel noise
         if (rc_filter_first_order_lowpass(&acc_lp, DT, ACCEL_LP_TC))
-                return false;
+                rc_set_state(EXITING);
+                //return false;
         // set signal handler so the loop can exit cleanly
         // signal(SIGINT, __signal_handler);
-        running = true;
+        rc_set_state(RUNNING);
+        //running = true;
         // init barometer and read in first data
         printf("initializing barometer\n");
         if (rc_bmp_init(BMP_OVERSAMPLE_16, BMP_FILTER_16))
-                return false;
+                rc_set_state(EXITING);
+                //return false;
         if (rc_bmp_read(&bmp_data))
-                return false;
+                rc_set_state(EXITING);
+                //return false;
         // init DMP
         printf("initializing DMP\n");
         mpu_conf = rc_mpu_default_config();
         mpu_conf.dmp_sample_rate = SAMPLE_RATE;
         mpu_conf.dmp_fetch_accel_gyro = 1;
         if (rc_mpu_initialize_dmp(&mpu_data, mpu_conf))
-                return false;
+                rc_set_state(EXITING);
+                //return false;
         // wait for dmp to settle then start filter callback
         printf("waiting for sensors to settle");
         fflush(stdout);
         rc_usleep(3000000);
         rc_mpu_set_dmp_callback(__dmp_handler);
+        rc_set_state(RUNNING);
         return true;
 }
 
@@ -224,7 +231,8 @@ void headerLogging()
 
 void __signal_handler(__attribute__((unused)) int dummy)
 {
-        running = false;
+        rc_set_state(EXITING);
+        //running = false;
         return;
 }
 
@@ -251,7 +259,8 @@ void __dmp_handler(void)
         // don't bother filtering Barometer, kalman will deal with that
         y.d[0] = bmp_data.alt_m;
         if (rc_kalman_update_lin(&kf, u, y))
-                running = false;
+                rc_set_state(EXITING);
+                //running = false;
         // now check if we need to sample BMP this loop
         bmp_sample_counter++;
         if (bmp_sample_counter >= BMP_RATE_DIV)
