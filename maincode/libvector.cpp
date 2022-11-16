@@ -18,6 +18,21 @@ rc_matrix_t H = RC_MATRIX_INITIALIZER;
 rc_matrix_t Q = RC_MATRIX_INITIALIZER;
 rc_matrix_t R = RC_MATRIX_INITIALIZER;
 rc_matrix_t Pi = RC_MATRIX_INITIALIZER;
+
+char path[50];
+
+long long unsigned int counter = 0;
+long long unsigned int initial_time;
+unsigned int n_iterations = 0;
+
+int counter_samples = 0;
+double leitura_anterior, leitura_nova;
+
+int caindo = 0;
+int paraquedas_acionado = 0;
+int counter_ignitor = 0;
+int sinal_acionamento = 0;
+
 extern ofstream logs;
 
 void init_values_kf()
@@ -124,6 +139,73 @@ void logging()
         logs << bmp_data.alt_m << ",";
         logs << acc_lp.newest_output;
         logs << "\n";
+}
+
+void init_gpios()
+{
+        rc_gpio_init(2, 3, GPIOHANDLE_REQUEST_OUTPUT);
+        rc_gpio_set_value(2, 3, 0);
+
+        rc_gpio_init(3, 1, GPIOHANDLE_REQUEST_INPUT);
+        rc_gpio_init(3, 2, GPIOHANDLE_REQUEST_OUTPUT);
+        rc_gpio_set_value(3, 2, 1);
+}
+
+void create_path()
+{
+        int mytime = (int)time(NULL);
+        char time_str[16];
+        my_itoa(mytime, time_str);
+
+        strcpy(path, PATH);
+        strcat(path, time_str);
+        strcat(path, ".csv");
+}
+
+void test_fall()
+{
+        if (n_iterations % (BMP_RATE_DIV) == 0)
+        {
+                leitura_nova = bmp_data.alt_m;
+                if (leitura_nova < leitura_anterior)
+                {
+                        counter_samples++;
+                }
+                else
+                {
+                        counter_samples = 0;
+                }
+                if (counter_samples >= 10)
+                {
+                        caindo = 1;
+                        counter_samples = 0;
+                }
+
+                cout << "Valor novo: " << leitura_nova << "----- Valor antigo: " << leitura_anterior << "----- Caindo: " << caindo << "---- Counter Samples: " << counter_samples << "\n";
+                leitura_anterior = leitura_nova;
+        }
+}
+
+void parachute_triggering()
+{
+        if (caindo == 1 && paraquedas_acionado == 0)
+        {
+                if (counter_ignitor < FS * TEMPO_ACIONAMENTO)
+                {
+                        sinal_acionamento = 1;
+                        rc_gpio_set_value(2, 3, 1);
+                        counter_ignitor++;
+                }
+                else
+                {
+                        rc_gpio_set_value(3, 2, 0);
+                        rc_gpio_set_value(2, 3, 0);
+
+                        counter_ignitor = 0;
+                        sinal_acionamento = 0;
+                        paraquedas_acionado = 1;
+                }
+        }
 }
 
 void headerLogging()

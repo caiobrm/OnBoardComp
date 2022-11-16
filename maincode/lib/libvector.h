@@ -1,11 +1,5 @@
-#include <stdio.h>
-#include <iostream>
-#include <robotcontrol.h>
+
 #include "database.h"
-#include <time.h>
-#include <signal.h>
-#include <fstream>
-#include <iomanip>
 
 #ifndef LIBVECTOR_H_INCLUDED
 #define LIBVECTOR_H_INCLUDED
@@ -21,6 +15,10 @@ bool init_sensors();
 
 void console();
 void logging();
+void init_gpios();
+void create_path();
+void test_fall();
+void parachute_triggering();
 int checkIgnitor();
 void headerbb();
 void headerll();
