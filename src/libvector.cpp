@@ -80,28 +80,23 @@ void init_values_kf()
         Pi.d[2][2] = 0.3174;
 }
 
-bool init_sensors()
+void init_sensors()
 {
         signal(SIGINT, __signal_handler);
         if (rc_kalman_alloc_lin(&kf, F, G, H, Q, R, Pi) == -1)
                 rc_set_state(EXITING);
-                //return false;
         // initialize the little LP filter to take out accel noise
         if (rc_filter_first_order_lowpass(&acc_lp, DT, ACCEL_LP_TC))
                 rc_set_state(EXITING);
-                //return false;
         // set signal handler so the loop can exit cleanly
         // signal(SIGINT, __signal_handler);
         rc_set_state(RUNNING);
-        //running = true;
         // init barometer and read in first data
         printf("initializing barometer\n");
         if (rc_bmp_init(BMP_OVERSAMPLE_16, BMP_FILTER_16))
                 rc_set_state(EXITING);
-                //return false;
         if (rc_bmp_read(&bmp_data))
                 rc_set_state(EXITING);
-                //return false;
         // init DMP
         printf("initializing DMP\n");
         mpu_conf = rc_mpu_default_config();
@@ -109,14 +104,12 @@ bool init_sensors()
         mpu_conf.dmp_fetch_accel_gyro = 1;
         if (rc_mpu_initialize_dmp(&mpu_data, mpu_conf))
                 rc_set_state(EXITING);
-                //return false;
         // wait for dmp to settle then start filter callback
         printf("waiting for sensors to settle");
         fflush(stdout);
         rc_usleep(3000000);
         rc_mpu_set_dmp_callback(__dmp_handler);
         rc_set_state(RUNNING);
-        return true;
 }
 
 int checkIgnitor(void)
@@ -274,6 +267,27 @@ void __dmp_handler(void)
 }
 
 // PAUSE SECTION //
+void ledState(){
+        if (rc_get_state() != EXITING)
+	{
+		turnon_ledgreen();
+	}
+}
+
+
+void pauseButton(){
+
+	// initialize pause button
+	if (rc_button_init(RC_BTN_PIN_PAUSE, RC_BTN_POLARITY_NORM_HIGH,
+					   RC_BTN_DEBOUNCE_DEFAULT_US))
+	{
+		fprintf(stderr, "ERROR: failed to initialize pause button\n");
+		return -1;
+	}
+
+	// Assign functions to be called when button events occur
+	rc_button_set_callbacks(RC_BTN_PIN_PAUSE, on_pause_press, on_pause_release);
+}
 
 void on_pause_release()
 {

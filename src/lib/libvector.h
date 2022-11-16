@@ -11,7 +11,7 @@
 #define PATH "/cplusplus/OnBoardComp/data/"
 
 void init_values_kf();
-bool init_sensors();
+void init_sensors();
 
 void console();
 void logging();
@@ -24,6 +24,8 @@ int checkIgnitor();
 void headerbb();
 void headerll();
 void headerLogging();
+void pauseButton();
+void ledState();
 
 void on_pause_press();
 void on_pause_release();
