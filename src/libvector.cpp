@@ -3,9 +3,6 @@
 
 using namespace std;
 
-FILE *fp;
-bool running = false;
-
 rc_mpu_data_t mpu_data;
 rc_bmp_data_t bmp_data;
 rc_kalman_t kf = RC_KALMAN_INITIALIZER;
@@ -225,7 +222,6 @@ void headerLogging()
 void __signal_handler(__attribute__((unused)) int dummy)
 {
         rc_set_state(EXITING);
-        //running = false;
         return;
 }
 
@@ -253,7 +249,6 @@ void __dmp_handler(void)
         y.d[0] = bmp_data.alt_m;
         if (rc_kalman_update_lin(&kf, u, y))
                 rc_set_state(EXITING);
-                //running = false;
         // now check if we need to sample BMP this loop
         bmp_sample_counter++;
         if (bmp_sample_counter >= BMP_RATE_DIV)
@@ -282,7 +277,7 @@ void pauseButton(){
 					   RC_BTN_DEBOUNCE_DEFAULT_US))
 	{
 		fprintf(stderr, "ERROR: failed to initialize pause button\n");
-		return -1;
+		rc_set_state(EXITING);
 	}
 
 	// Assign functions to be called when button events occur

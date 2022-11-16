@@ -10,7 +10,7 @@ int main()
 	init_gpios();
 
 	init_values_kf();
-	running = init_sensors();
+	init_sensors();
 
 	create_path();
 	logs.open(path, ios::app);
