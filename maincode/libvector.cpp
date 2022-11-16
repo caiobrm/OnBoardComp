@@ -1,3 +1,4 @@
+
 #include "lib/libvector.h"
 
 using namespace std;
@@ -118,7 +119,6 @@ int checkIgnitor(void)
 
 void console()
 {
-
         printf("\r");
         // printf("%6.9lfs|", (double)counter / 1000000000);
         printf(" %8.4fm|", kf.x_est.d[0]);
@@ -127,6 +127,8 @@ void console()
         printf(" %9.4fm|", bmp_data.alt_m);
         printf(" %7.4fm/s^2|", acc_lp.newest_output);
         printf("\n");
+
+        // Deve ser atualizada para cout em vez de printf
 }
 
 void logging()
@@ -149,6 +151,13 @@ void init_gpios()
         rc_gpio_init(3, 1, GPIOHANDLE_REQUEST_INPUT);
         rc_gpio_init(3, 2, GPIOHANDLE_REQUEST_OUTPUT);
         rc_gpio_set_value(3, 2, 1);
+
+        // Utilizar GPIOs para usar os leds embutidos para sinalizar que o codigo esta rodando, que esta aquisitando dados, que o paraquedas foi acionado, etc...
+}
+
+void turnon_ledgreen()
+{
+        rc_gpio_set_value(2, 3, 1);
 }
 
 void create_path()
@@ -193,7 +202,7 @@ void parachute_triggering()
                 if (counter_ignitor < FS * TEMPO_ACIONAMENTO)
                 {
                         sinal_acionamento = 1;
-                        rc_gpio_set_value(2, 3, 1);
+                        // rc_gpio_set_value(2, 3, 1);
                         counter_ignitor++;
                 }
                 else
@@ -218,6 +227,7 @@ void __signal_handler(__attribute__((unused)) int dummy)
         running = false;
         return;
 }
+
 void __dmp_handler(void)
 {
         int i;

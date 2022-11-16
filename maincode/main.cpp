@@ -16,7 +16,23 @@ int main()
 	logs.open(path, ios::app);
 	headerLogging();
 
-	while (running)
+	// initialize pause button
+	if (rc_button_init(RC_BTN_PIN_PAUSE, RC_BTN_POLARITY_NORM_HIGH,
+					   RC_BTN_DEBOUNCE_DEFAULT_US))
+	{
+		fprintf(stderr, "ERROR: failed to initialize pause button\n");
+		return -1;
+	}
+
+	// Assign functions to be called when button events occur
+	rc_button_set_callbacks(RC_BTN_PIN_PAUSE, on_pause_press, on_pause_release);
+
+	if (rc_get_state() != EXITING)
+	{
+		turnon_ledgreen();
+	}
+
+	while (rc_get_state() != EXITING)
 	{
 		if (n_iterations == 0)
 		{

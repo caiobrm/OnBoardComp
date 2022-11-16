@@ -16,6 +16,7 @@ bool init_sensors();
 void console();
 void logging();
 void init_gpios();
+void turnon_ledgreen();
 void create_path();
 void test_fall();
 void parachute_triggering();
