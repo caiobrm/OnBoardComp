@@ -24,15 +24,15 @@ int main()
 		if (n_iterations == 0)
 		{
 			initial_time = rc_nanos_since_boot();
-			leitura_nova = bmp_data.alt_m;
+			newData = bmp_data.alt_m;
 		}
 
 		test_fall();
-		// paraquedas_acionado = checkIgnitor();
+		// parachuteOpen = checkIgnitor();
 
 		parachute_triggering();
 
-		cout << "Caindo: " << caindo << "---- Paraquedas_acionado: " << paraquedas_acionado << "----- SINAL_TESTE: " << sinal_acionamento << "------ counter_ignitor: " << counter_ignitor << "\n";
+		cout << "falling: " << falling << "---- parachuteOpen: " << parachuteOpen << "----- SINAL_TESTE: " << ignitionSignal << "------ counter_ignitor: " << counter_ignitor << "\n";
 
 		logging();
 		fflush(stdout);

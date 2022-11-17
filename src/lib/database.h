@@ -43,11 +43,11 @@ extern long long unsigned int initial_time;
 extern unsigned int n_iterations;
 
 extern int counter_samples;
-extern double leitura_anterior, leitura_nova;
+extern double oldData, newData;
 
-extern int caindo;
-extern int paraquedas_acionado;
+extern bool falling;
+extern bool parachuteOpen;
 extern int counter_ignitor;
-extern int sinal_acionamento;
+extern int ignitionSignal;
 
 #endif
