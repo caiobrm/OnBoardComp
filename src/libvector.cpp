@@ -33,8 +33,6 @@ int ignitionSignal = 0;
 
 extern ofstream logs;
 
-
-
 int checkIgnitor(void)
 {
         return !rc_gpio_get_value(3, 1);
@@ -65,7 +63,6 @@ void logging()
         logs << acc_lp.newest_output;
         logs << "\n";
 }
-
 
 void create_path()
 {
@@ -109,14 +106,15 @@ void parachute_triggering()
                 if (counter_ignitor < FS * TEMPO_ACIONAMENTO)
                 {
                         ignitionSignal = 1;
-                        // rc_gpio_set_value(2, 3, 1);
+                        turnon_ledred();
                         counter_ignitor++;
                 }
                 else
                 {
-                        rc_gpio_set_value(3, 2, 0);
-                        rc_gpio_set_value(2, 3, 0);
+                        // rc_gpio_set_value(3, 2, 0);
+                        // rc_gpio_set_value(2, 3, 0);
 
+                        turnoff_ledred();
                         counter_ignitor = 0;
                         ignitionSignal = 0;
                         parachuteOpen = true;
@@ -129,14 +127,13 @@ void headerLogging()
         logs << "time,altitude,velocity,accel_bias,alt (bmp),vert_accel\n";
 }
 
-
-
 // PAUSE SECTION //
-void ledState(){
+void ledState()
+{
         if (rc_get_state() != EXITING)
-	{
-		turnon_ledgreen();
-	}
+        {
+                turnon_ledgreen();
+        }
 }
 
 char *my_itoa(int num, char *str)

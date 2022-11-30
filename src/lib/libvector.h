@@ -8,7 +8,7 @@
 #define FS 50               // hz
 #define TEMPO_ACIONAMENTO 2 // em segundos
 
-#define PATH "/cplusplus/OnBoardComp/data/"
+#define PATH "/OnBoardComp/data/"
 
 void init_values_kf();
 void init_sensors();
@@ -17,6 +17,9 @@ void console();
 void logging();
 void init_gpios();
 void turnon_ledgreen();
+void turnoff_ledgreen();
+void turnon_ledred();
+void turnoff_ledred();
 void create_path();
 void test_fall();
 void parachute_triggering();

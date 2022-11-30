@@ -1,3 +1,3 @@
 echo "Cleaning logs folder..."
-sudo rm -rf /cplusplus/OnBoardComp/data/*
+sudo rm -rf /OnBoardComp/data/*
 echo "Done."

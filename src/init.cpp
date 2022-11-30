@@ -1,8 +1,6 @@
 #include "lib/libvector.h"
 
-
 using namespace std;
-
 
 void init_values_kf()
 {
@@ -84,16 +82,33 @@ void init_gpios()
         rc_gpio_init(2, 3, GPIOHANDLE_REQUEST_OUTPUT);
         rc_gpio_set_value(2, 3, 0);
 
+        rc_gpio_init(2, 2, GPIOHANDLE_REQUEST_OUTPUT);
+        rc_gpio_set_value(2, 2, 0);
+
         rc_gpio_init(3, 1, GPIOHANDLE_REQUEST_INPUT);
         rc_gpio_init(3, 2, GPIOHANDLE_REQUEST_OUTPUT);
         rc_gpio_set_value(3, 2, 1);
-
         // Utilizar GPIOs para usar os leds embutidos para sinalizar que o codigo esta rodando, que esta aquisitando dados, que o paraquedas foi acionado, etc...
 }
 
 void turnon_ledgreen()
 {
         rc_gpio_set_value(2, 3, 1);
+}
+
+void turnoff_ledgreen()
+{
+        rc_gpio_set_value(2, 3, 0);
+}
+
+void turnon_ledred()
+{
+        rc_gpio_set_value(2, 2, 1);
+}
+
+void turnoff_ledred()
+{
+        rc_gpio_set_value(2, 2, 0);
 }
 
 void __signal_handler(__attribute__((unused)) int dummy)
@@ -138,18 +153,19 @@ void __dmp_handler(void)
         return;
 }
 
-void pauseButton(){
+void pauseButton()
+{
 
-	// initialize pause button
-	if (rc_button_init(RC_BTN_PIN_PAUSE, RC_BTN_POLARITY_NORM_HIGH,
-					   RC_BTN_DEBOUNCE_DEFAULT_US))
-	{
-		fprintf(stderr, "ERROR: failed to initialize pause button\n");
-		rc_set_state(EXITING);
-	}
+        // initialize pause button
+        if (rc_button_init(RC_BTN_PIN_PAUSE, RC_BTN_POLARITY_NORM_HIGH,
+                           RC_BTN_DEBOUNCE_DEFAULT_US))
+        {
+                fprintf(stderr, "ERROR: failed to initialize pause button\n");
+                rc_set_state(EXITING);
+        }
 
-	// Assign functions to be called when button events occur
-	rc_button_set_callbacks(RC_BTN_PIN_PAUSE, on_pause_press, on_pause_release);
+        // Assign functions to be called when button events occur
+        rc_button_set_callbacks(RC_BTN_PIN_PAUSE, on_pause_press, on_pause_release);
 }
 
 void on_pause_release()

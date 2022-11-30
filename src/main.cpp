@@ -17,10 +17,12 @@ int main()
 	headerLogging();
 
 	pauseButton();
-	ledState();
+	// ledState();
 
 	while (rc_get_state() != EXITING)
 	{
+		turnon_ledgreen();
+
 		if (n_iterations == 0)
 		{
 			initial_time = rc_nanos_since_boot();
@@ -42,6 +44,8 @@ int main()
 
 		n_iterations++;
 	}
+
+	turnoff_ledgreen();
 
 	rc_mpu_power_off();
 	rc_bmp_power_off();
