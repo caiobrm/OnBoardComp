@@ -1,4 +1,4 @@
-
+#pragma once
 #include "database.h"
 
 #ifndef LIBVECTOR_H_INCLUDED
