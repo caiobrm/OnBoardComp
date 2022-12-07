@@ -29,7 +29,7 @@ int main()
 			newData = bmp_data.alt_m;
 		}
 
-		test_movement();
+		check_barometer();
 		// parachuteOpen = checkIgnitor();
 
 		parachute_triggering();

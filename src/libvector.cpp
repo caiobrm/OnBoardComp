@@ -79,7 +79,7 @@ void create_path()
         strcat(path, ".csv");
 }
 
-void test_movement()
+void check_barometer()
 {
         if (n_iterations % (BMP_RATE_DIV) == 0)
         {
@@ -128,6 +128,10 @@ void test_movement()
                 cout << "Valor novo: " << newData << "----- Valor antigo: " << oldData << "----- falling: " << falling << "---- CS_fall: " << counter_samples_fall << "---rising" << rising << "--- CS_rise" << counter_samples_rise << "\n";
                 oldData = newData;
         }
+}
+
+void check_accel()
+{
 }
 
 void parachute_triggering()
