@@ -22,7 +22,8 @@
 
 #define FS 50 // hz
 
-#define SAMPLES_LIMIT 10 // number of samples
+#define SAMPLES_LIMIT 10      // number of samples
+#define DIFF_ALTITUDE_JUMP 25 // jump
 
 // VARIABLES //
 

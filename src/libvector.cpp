@@ -84,7 +84,11 @@ void test_movement()
         if (n_iterations % (BMP_RATE_DIV) == 0)
         {
                 newData = bmp_data.alt_m;
-                if (newData < oldData)
+                if (newData <= oldData - DIFF_ALTITUDE_JUMP)
+                {
+                        counter_samples_fall += 3;
+                }
+                else if (newData < oldData)
                 {
                         counter_samples_fall++;
                 }
@@ -92,7 +96,11 @@ void test_movement()
                 {
                         counter_samples_fall = 0;
                 }
-                if (newData > oldData)
+                if (newData >= oldData + DIFF_ALTITUDE_JUMP)
+                {
+                        counter_samples_rise += 3;
+                }
+                else if (newData > oldData)
                 {
                         counter_samples_rise++;
                 }
