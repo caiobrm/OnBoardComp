@@ -29,12 +29,12 @@ int main()
 			newData = bmp_data.alt_m;
 		}
 
-		test_fall();
+		test_movement();
 		// parachuteOpen = checkIgnitor();
 
 		parachute_triggering();
 
-		cout << "falling: " << falling << "---- parachuteOpen: " << parachuteOpen << "----- SINAL_TESTE: " << ignitionSignal << "------ counter_ignitor: " << counter_ignitor << "\n";
+		// cout << "falling: " << falling << "---- rising " << rising << "----- stationary: " << stationary << "\n";
 
 		logging();
 		fflush(stdout);

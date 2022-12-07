@@ -21,7 +21,7 @@ void turnoff_ledgreen();
 void turnon_ledred();
 void turnoff_ledred();
 void create_path();
-void test_fall();
+void test_movement();
 void parachute_triggering();
 int checkIgnitor();
 void headerbb();

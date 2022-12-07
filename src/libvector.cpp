@@ -23,10 +23,14 @@ long long unsigned int counter = 0;
 long long unsigned int initial_time;
 unsigned int n_iterations = 0;
 
-int counter_samples = 0;
+int counter_samples_fall = 0;
+int counter_samples_rise = 0;
 double oldData, newData;
 
 bool falling = false;
+bool rising = false;
+bool stationary = true;
+
 bool parachuteOpen = false;
 int counter_ignitor = 0;
 int ignitionSignal = 0;
@@ -55,7 +59,7 @@ void console()
 void logging()
 {
         logs << setprecision(4) << fixed;
-
+        logs << (double)counter / 1000000000;
         logs << kf.x_est.d[0] << ",";
         logs << kf.x_est.d[1] << ",";
         logs << kf.x_est.d[2] << ",";
@@ -75,26 +79,45 @@ void create_path()
         strcat(path, ".csv");
 }
 
-void test_fall()
+void test_movement()
 {
         if (n_iterations % (BMP_RATE_DIV) == 0)
         {
                 newData = bmp_data.alt_m;
                 if (newData < oldData)
                 {
-                        counter_samples++;
+                        counter_samples_fall++;
                 }
                 else
                 {
-                        counter_samples = 0;
+                        counter_samples_fall = 0;
                 }
-                if (counter_samples >= 10)
+                if (newData > oldData)
+                {
+                        counter_samples_rise++;
+                }
+                else
+                {
+                        counter_samples_rise = 0;
+                }
+                if (counter_samples_fall >= SAMPLES_LIMIT)
                 {
                         falling = true;
-                        counter_samples = 0;
+                        counter_samples_fall = 0;
+                }
+                else if (counter_samples_rise >= SAMPLES_LIMIT)
+                {
+                        rising = true;
+                        counter_samples_rise = 0;
+                }
+                else
+                {
+                        rising = false;
+                        falling = false;
+                        stationary = true;
                 }
 
-                cout << "Valor novo: " << newData << "----- Valor antigo: " << oldData << "----- falling: " << falling << "---- Counter Samples: " << counter_samples << "\n";
+                cout << "Valor novo: " << newData << "----- Valor antigo: " << oldData << "----- falling: " << falling << "---- CS_fall: " << counter_samples_fall << "---rising" << rising << "--- CS_rise" << counter_samples_rise << "\n";
                 oldData = newData;
         }
 }

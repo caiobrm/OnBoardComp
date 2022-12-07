@@ -22,6 +22,8 @@
 
 #define FS 50 // hz
 
+#define SAMPLES_LIMIT 10 // number of samples
+
 // VARIABLES //
 
 extern rc_mpu_data_t mpu_data;
@@ -44,10 +46,14 @@ extern long long unsigned int counter;
 extern long long unsigned int initial_time;
 extern unsigned int n_iterations;
 
-extern int counter_samples;
+extern int counter_samples_fall;
+extern int counter_samples_rise;
 extern double oldData, newData;
 
 extern bool falling;
+extern bool rising;
+extern bool stationary;
+
 extern bool parachuteOpen;
 extern int counter_ignitor;
 extern int ignitionSignal;
