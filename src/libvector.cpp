@@ -155,6 +155,50 @@ void check_parachute(uint8_t * parachute_flag)
         {
                 *parachute_flag = PARACHUTE_ACTIVATED;
         }
+        //verificar se gpio_get_value pode retornar outro valor além de 0 ou 1 --> tratamento de erros.
+}
+
+//flag de stable
+//flag de prepared
+
+void set_state(uint8_t altitude_flag, uint8_t accel_flag, uint8_t parachute_flag, uint8_t stability_flag, uint8_t * state)
+{       
+        if(parachute_flag == PARACHUTE_DEACTIVATED)
+        {
+                if(altitude_flag == ALTITUDE_STATIONARY && accel_flag == ACCEL_NEAR_ZERO)
+                {
+                        if(stability_flag == STABILITY_UNSTABLE)
+                        {
+                                *state = STATE_STABILIZATION;
+                        }
+                        else if(stability_flag == STABILITY_ESTABLE)
+                        {
+                                *state = STATE_PREPARED_4_FLIGHT;
+                        }
+                }
+                else if(altitude_flag == ALTITUDE_RISING)
+                {
+                        if(accel_flag == ACCEL_HIGH_POSITIVE)
+                        {
+                                *state = STATE_ACCELERATED_FLIGHT;
+                        }
+                        else if(accel_flag == ACCEL_NEAR_G || accel_flag == ACCEL_LOW_NEGATIVE) 
+                        {
+                                *state = STATE_RETARDED_FLIGHT;
+                        }
+                }      
+                else if(altitude_flag == ALTITUDE_FALLING)
+                {
+                        if(accel_flag == ACCEL_NEAR_G)
+                        {
+                                *state = STATE_FALL_NO_PARACHUTE;
+                        }
+                }
+        }
+        else if(parachute_flag == PARACHUTE_ACTIVATED)
+        {
+                if()
+        }
 }
 
 /*

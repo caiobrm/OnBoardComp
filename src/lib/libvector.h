@@ -24,6 +24,7 @@ void create_path();
 void check_barometer(uint8_t *);
 void check_accel(uint8_t *);
 void check_parachute(uint8_t *);
+void set_state(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t *);
 //void parachute_triggering();
 void headerbb();
 void headerll();
