@@ -3,8 +3,8 @@
 using namespace std;
 
 ofstream logs;
-// char path[50];
 
+// char path[50];
 
 int main()
 {
@@ -33,6 +33,7 @@ int main()
 		}
 
 		check_barometer(&altitude_flag);
+		check_accel(&accel_flag);
 		// parachuteOpen = checkIgnitor();
 
 		//parachute_triggering();

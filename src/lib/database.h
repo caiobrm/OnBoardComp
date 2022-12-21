@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iomanip>
 
+
 #ifndef DATABASE_H_INCLUDED
 #define DATABASE_H_INCLUDED
 
@@ -24,6 +25,9 @@
 
 #define SAMPLES_LIMIT 10      // number of samples
 #define DIFF_ALTITUDE_JUMP 25 // jump
+
+// CONSTANTS //
+#define GRAVITY 9.80665
 
 // STATES //
 
@@ -42,6 +46,7 @@
 #define ACCEL_NEAR_G 1
 #define ACCEL_HIGH_POSITIVE 2
 #define ACCEL_LOW_NEGATIVE 3
+#define ACCEL_HIGH_NEGATIVE 4 //never going to happen
 
 // ALTITUDE FLAGS //
 
@@ -88,7 +93,6 @@ extern int counter_samples_fall;
 extern int counter_samples_rise;
 extern double oldData, newData;
 
-extern bool parachuteOpen;
 extern int counter_ignitor;
 extern int ignitionSignal;
 

@@ -27,16 +27,10 @@ int counter_samples_fall = 0;
 int counter_samples_rise = 0;
 double oldData, newData;
 
-bool parachuteOpen = false;
 int counter_ignitor = 0;
 int ignitionSignal = 0;
 
 extern ofstream logs;
-
-int checkIgnitor(void)
-{
-        return !rc_gpio_get_value(3, 1);
-}
 
 void console()
 {
@@ -125,9 +119,35 @@ void check_barometer(uint8_t * altitude_flag)
         }
 }
 
-void check_accel()
+void check_accel(uint8_t * accel_flag)
 {
+        if(acc_lp.newest_output <= 1 && acc_lp.newest_output >= -1)
+        {
+                *accel_flag = ACCEL_NEAR_ZERO;
+        }
+        else if(acc_lp.newest_output <= -GRAVITY + 1 && acc_lp.newest_output >= -GRAVITY-1)
+        {
+                *accel_flag = ACCEL_NEAR_G;
+        }
+        else if(acc_lp.newest_output > 1)
+        {
+                *accel_flag = ACCEL_HIGH_POSITIVE;
+        }
+        else if(acc_lp.newest_output <= -1 && acc_lp.newest_output >= -GRAVITY+1)
+        {
+                *accel_flag = ACCEL_LOW_NEGATIVE;
+        }
+        else
+        {
+                *accel_flag = ACCEL_HIGH_NEGATIVE;
+        }
+
+        cout << "accel_flag: " << unsigned(*accel_flag) << "\n";
 }
+
+void check_parachute(uint8_t * parachute_flag)
+        
+
 
 /*
 void parachute_triggering()
