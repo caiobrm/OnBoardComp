@@ -25,6 +25,43 @@
 #define SAMPLES_LIMIT 10      // number of samples
 #define DIFF_ALTITUDE_JUMP 25 // jump
 
+// STATES //
+
+#define STATE_STABILIZATION 0
+#define STATE_PREPARED_4_FLIGHT 1
+#define STATE_ACCELERATED_FLIGHT 2
+#define STATE_RETARDED_FLIGHT 3
+#define STATE_FALL_NO_PARACHUTE 4
+#define STATE_FALL_PARACHUTE_DECELERATE 5
+#define STATE_FALL_PARACHUTE_TERMINAL_VELOCITY 6
+#define STATE_LANDED 7
+
+// ACCEL FLAGS //
+
+#define ACCEL_NEAR_ZERO 0
+#define ACCEL_NEAR_G 1
+#define ACCEL_HIGH_POSITIVE 2
+#define ACCEL_LOW_NEGATIVE 3
+
+// ALTITUDE FLAGS //
+
+#define ALTITUDE_STATIONARY 0
+#define ALTITUDE_RISING 1
+#define ALTITUDE_FALLING 2
+
+// PARACHUTE DETECTOR FLAGS //
+
+#define PARACHUTE_DEACTIVATED 0
+#define PARACHUTE_ACTIVATED 1
+
+// CAM FLAGS //
+
+#define CAM_ON 0
+#define CAM_CAPTURE 1
+#define CAM_ERROR 0xFF
+#define CAM_OFF 3
+
+
 // VARIABLES //
 
 extern rc_mpu_data_t mpu_data;
@@ -50,10 +87,6 @@ extern unsigned int n_iterations;
 extern int counter_samples_fall;
 extern int counter_samples_rise;
 extern double oldData, newData;
-
-extern bool falling;
-extern bool rising;
-extern bool stationary;
 
 extern bool parachuteOpen;
 extern int counter_ignitor;

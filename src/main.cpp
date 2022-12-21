@@ -5,8 +5,11 @@ using namespace std;
 ofstream logs;
 // char path[50];
 
+
 int main()
 {
+	uint8_t state = STATE_STABILIZATION, accel_flag = ACCEL_NEAR_ZERO, altitude_flag = ALTITUDE_STATIONARY;
+
 	init_gpios();
 
 	init_values_kf();
@@ -29,10 +32,10 @@ int main()
 			newData = bmp_data.alt_m;
 		}
 
-		check_barometer();
+		check_barometer(&altitude_flag);
 		// parachuteOpen = checkIgnitor();
 
-		parachute_triggering();
+		//parachute_triggering();
 
 		// cout << "falling: " << falling << "---- rising " << rising << "----- stationary: " << stationary << "\n";
 

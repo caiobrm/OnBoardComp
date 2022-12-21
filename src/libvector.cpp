@@ -27,10 +27,6 @@ int counter_samples_fall = 0;
 int counter_samples_rise = 0;
 double oldData, newData;
 
-bool falling = false;
-bool rising = false;
-bool stationary = true;
-
 bool parachuteOpen = false;
 int counter_ignitor = 0;
 int ignitionSignal = 0;
@@ -79,8 +75,9 @@ void create_path()
         strcat(path, ".csv");
 }
 
-void check_barometer()
+void check_barometer(uint8_t * altitude_flag)
 {
+      
         if (n_iterations % (BMP_RATE_DIV) == 0)
         {
                 newData = bmp_data.alt_m;
@@ -110,22 +107,20 @@ void check_barometer()
                 }
                 if (counter_samples_fall >= SAMPLES_LIMIT)
                 {
-                        falling = true;
+                        *altitude_flag = ALTITUDE_FALLING;
                         counter_samples_fall = 0;
                 }
                 else if (counter_samples_rise >= SAMPLES_LIMIT)
                 {
-                        rising = true;
+                        *altitude_flag = ALTITUDE_RISING;
                         counter_samples_rise = 0;
                 }
                 else
                 {
-                        rising = false;
-                        falling = false;
-                        stationary = true;
+                        *altitude_flag = ALTITUDE_STATIONARY;
                 }
 
-                cout << "Valor novo: " << newData << "----- Valor antigo: " << oldData << "----- falling: " << falling << "---- CS_fall: " << counter_samples_fall << "---rising" << rising << "--- CS_rise" << counter_samples_rise << "\n";
+                cout << "Valor novo: " << newData << "----- Valor antigo: " << oldData << "----- altitude_flag: " << unsigned(*altitude_flag) << "---- CS_fall: " << counter_samples_fall << "--- CS_rise  " << counter_samples_rise << "\n";
                 oldData = newData;
         }
 }
@@ -134,6 +129,7 @@ void check_accel()
 {
 }
 
+/*
 void parachute_triggering()
 {
         if (falling == true && parachuteOpen == false)
@@ -156,6 +152,7 @@ void parachute_triggering()
                 }
         }
 }
+*/
 
 void headerLogging()
 {
