@@ -146,8 +146,16 @@ void check_accel(uint8_t * accel_flag)
 }
 
 void check_parachute(uint8_t * parachute_flag)
-        
-
+{
+        if(rc_gpio_get_value(3,1) == 0)
+        {
+                *parachute_flag = PARACHUTE_DEACTIVATED;
+        }
+        else
+        {
+                *parachute_flag = PARACHUTE_ACTIVATED;
+        }
+}
 
 /*
 void parachute_triggering()
