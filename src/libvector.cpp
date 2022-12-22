@@ -147,15 +147,17 @@ void check_accel(uint8_t * accel_flag)
 
 void check_parachute(uint8_t * parachute_flag)
 {
-        if(rc_gpio_get_value(3,1) == 0)
-        {
-                *parachute_flag = PARACHUTE_DEACTIVATED;
-        }
-        else
+        if(rc_gpio_get_value(3,1) == 1)
         {
                 *parachute_flag = PARACHUTE_ACTIVATED;
         }
-        //verificar se gpio_get_value pode retornar outro valor além de 0 ou 1 --> tratamento de erros.
+        else
+        {
+                *parachute_flag = PARACHUTE_DEACTIVATED;
+        }
+        //GPIO retorna -1 em caso de erro.
+        //Criar modo de emergência caso a velocidade esteja muito alta e em queda -> paraquedas não foi acionado devido
+        //a um erro de GPIO
 }
 
 //flag de stable
@@ -169,35 +171,49 @@ void set_state(uint8_t altitude_flag, uint8_t accel_flag, uint8_t parachute_flag
                 {
                         if(stability_flag == STABILITY_UNSTABLE)
                         {
-                                *state = STATE_STABILIZATION;
+                                *state = STATE_STABILIZATION; //STATE 0
                         }
                         else if(stability_flag == STABILITY_ESTABLE)
                         {
-                                *state = STATE_PREPARED_4_FLIGHT;
+                                *state = STATE_PREPARED_4_FLIGHT; //STATE 1
                         }
                 }
                 else if(altitude_flag == ALTITUDE_RISING)
                 {
                         if(accel_flag == ACCEL_HIGH_POSITIVE)
                         {
-                                *state = STATE_ACCELERATED_FLIGHT;
+                                *state = STATE_ACCELERATED_FLIGHT; //STATE 2
                         }
                         else if(accel_flag == ACCEL_NEAR_G || accel_flag == ACCEL_LOW_NEGATIVE) 
                         {
-                                *state = STATE_RETARDED_FLIGHT;
+                                *state = STATE_RETARDED_FLIGHT; //STATE 3
                         }
                 }      
                 else if(altitude_flag == ALTITUDE_FALLING)
                 {
                         if(accel_flag == ACCEL_NEAR_G)
                         {
-                                *state = STATE_FALL_NO_PARACHUTE;
+                                *state = STATE_FALL_NO_PARACHUTE; //STATE 4
                         }
                 }
         }
         else if(parachute_flag == PARACHUTE_ACTIVATED)
         {
-                if()
+                if(altitude_flag == ALTITUDE_FALLING)
+                {
+                        if(accel_flag == ACCEL_LOW_NEGATIVE)
+                        {
+                                *state = STATE_FALL_PARACHUTE_DECELERATE; //STATE 5
+                        }
+                        else if(accel_flag == ACCEL_NEAR_ZERO)
+                        {       
+                                *state = STATE_FALL_PARACHUTE_TERMINAL_VELOCITY; //STATE 6
+                        }       
+                }
+                else if(altitude_flag == ALTITUDE_STATIONARY && accel_flag == ACCEL_NEAR_ZERO)
+                {      
+                       *state = STATE_LANDED; //STATE 7 
+                }
         }
 }
 
