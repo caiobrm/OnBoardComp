@@ -163,6 +163,7 @@ void check_parachute(uint8_t * parachute_flag)
 //flag de stable
 //flag de prepared
 
+/*
 void set_state(uint8_t altitude_flag, uint8_t accel_flag, uint8_t parachute_flag, uint8_t stability_flag, uint8_t * state)
 {       
         if(parachute_flag == PARACHUTE_DEACTIVATED)
@@ -214,6 +215,47 @@ void set_state(uint8_t altitude_flag, uint8_t accel_flag, uint8_t parachute_flag
                 {      
                        *state = STATE_LANDED; //STATE 7 
                 }
+        }
+}
+*/
+
+void set_state(uint8_t altitude_flag, uint8_t accel_flag, uint8_t parachute_flag, uint8_t stability_flag, uint8_t * state)
+{       
+        if(parachute_flag == PARACHUTE_DEACTIVATED && altitude_flag == ALTITUDE_STATIONARY && accel_flag == ACCEL_NEAR_ZERO && stability_flag == STABILITY_UNSTABLE)
+        {
+                *state = STATE_STABILIZATION; //STATE 0
+        }
+        else if(parachute_flag == PARACHUTE_DEACTIVATED && altitude_flag == ALTITUDE_STATIONARY && accel_flag == ACCEL_NEAR_ZERO && stability_flag == STABILITY_ESTABLE)
+        {
+                *state = STATE_PREPARED_4_FLIGHT; //STATE 1
+        }
+        else if(parachute_flag == PARACHUTE_DEACTIVATED && stability_flag == STABILITY_ESTABLE && altitude_flag == ALTITUDE_RISING && accel_flag == ACCEL_HIGH_POSITIVE)
+        {
+                *state = STATE_ACCELERATED_FLIGHT; //STATE 2
+        }
+        else if(parachute_flag == PARACHUTE_DEACTIVATED && stability_flag == STABILITY_ESTABLE && altitude_flag == ALTITUDE_RISING && (accel_flag == ACCEL_NEAR_G || accel_flag == ACCEL_LOW_NEGATIVE))
+        {
+                *state = STATE_RETARDED_FLIGHT; //STATE 3
+        }
+        else if(parachute_flag == PARACHUTE_DEACTIVATED && stability_flag == STABILITY_ESTABLE && altitude_flag == ALTITUDE_FALLING && accel_flag == ACCEL_NEAR_G)
+        {
+                *state = STATE_FALL_NO_PARACHUTE; //STATE 4 
+        }
+        else if(parachute_flag == PARACHUTE_ACTIVATED && stability_flag == STABILITY_ESTABLE && altitude_flag == ALTITUDE_FALLING && accel_flag == ACCEL_LOW_NEGATIVE)
+        {
+                *state = STATE_FALL_PARACHUTE_DECELERATE; //STATE 5
+        }
+        else if(parachute_flag == PARACHUTE_ACTIVATED && stability_flag == STABILITY_ESTABLE && altitude_flag == ALTITUDE_FALLING && accel_flag == ACCEL_NEAR_ZERO)
+        {
+                *state = STATE_FALL_PARACHUTE_TERMINAL_VELOCITY; //STATE 6
+        }
+        else if(parachute_flag == PARACHUTE_ACTIVATED && stability_flag == STABILITY_ESTABLE && altitude_flag == ALTITUDE_STATIONARY && accel_flag == ACCEL_NEAR_ZERO)
+        {
+                *state = STATE_LANDED; //STATE 7 
+        }
+        else
+        {
+                *state = STATE_UNKNOWN; //STATE -1
         }
 }
 
