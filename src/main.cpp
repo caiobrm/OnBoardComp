@@ -43,7 +43,7 @@ int main()
 		logging();
 		fflush(stdout);
 
-		rc_nanosleep(1000000000 / FS - (rc_nanos_since_boot() - initial_time + 1185 - counter));
+		rc_nanosleep(1000000000 / FS - (rc_nanos_since_boot() - initial_time + 1185 - counter)); //error if 0
 		counter = rc_nanos_since_boot() - initial_time + 1185;
 
 		n_iterations++;

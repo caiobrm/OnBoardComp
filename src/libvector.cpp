@@ -49,7 +49,7 @@ void console()
 void logging()
 {
         logs << setprecision(4) << fixed;
-        logs << (double)counter / 1000000000;
+        logs << (double)counter / 1000000000 << ",";
         logs << kf.x_est.d[0] << ",";
         logs << kf.x_est.d[1] << ",";
         logs << kf.x_est.d[2] << ",";
