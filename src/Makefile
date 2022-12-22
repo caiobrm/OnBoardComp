@@ -14,8 +14,8 @@ LDFLAGS		:= -pthread -lm -lrt -l:librobotcontrol.so.1
 OBJ_DIR 	:= obj
 INIT_DIR 	:= init
 
-SOURCES		:= $(shell find /windows-reverse-shell/src -name "*.cpp")
-INCLUDES	:= $(shell find /windows-reverse-shell/src -name "*.h")
+SOURCES		:= $(shell find ../src -name "*.cpp")
+INCLUDES	:= $(shell find ../src -name "*.h")
 OBJECTS		:= $(SOURCES:$%.cpp=$%.o)
 
 prefix		:= /usr/local
@@ -55,6 +55,11 @@ install:
 	@echo "$(TARGET) Install Complete"
 
 clean:
+	@$(RM) $(OBJECTS)
+	@$(RM) $(TARGET)
+	@echo "$(TARGET) Clean Complete"
+
+cleanall:
 	@$(RM) $(OBJECTS)
 	@$(RM) $(TARGET)
 	@echo "$(TARGET) Clean Complete"
