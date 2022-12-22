@@ -11,11 +11,8 @@ WFLAGS		:= -Wall -Wextra -Werror=float-equal -Wuninitialized -Wunused-variable -
 CFLAGS		:= -g -c -Wall
 LDFLAGS		:= -pthread -lm -lrt -l:librobotcontrol.so.1
 
-OBJ_DIR 	:= obj
-INIT_DIR 	:= init
-
-SOURCES		:= $(shell find ../src -name "*.cc")
-INCLUDES	:= $(shell find ../src -name "*.h")
+SOURCES		:= $(shell find ../cam -name "*.cc")
+INCLUDES	:= $(shell find ../cam -name "*.h")
 OBJECTS		:= $(SOURCES:$%.cc=$%.o)
 
 prefix		:= /usr/local
@@ -36,7 +33,7 @@ $(TARGET): $(OBJECTS)
 
 
 # compiling commands
-$(OBJECTS): %.o : %.cpp $(INCLUDES)
+$(OBJECTS): %.o : %.cc $(INCLUDES)
 	@$(CC) $(CFLAGS) $(WFLAGS) $(DEBUGFLAG) $< -o $@
 	@echo "Compiled: $@"
 
@@ -58,7 +55,6 @@ clean:
 	@$(RM) $(OBJECTS)
 	@$(RM) $(TARGET)
 	@echo "$(TARGET) Clean Complete"
-	@sudo bash /OnBoardComp/shells/cleanlogs.sh
 
 uninstall:
 	@$(RM) $(DESTDIR)$(prefix)/bin/$(TARGET)
